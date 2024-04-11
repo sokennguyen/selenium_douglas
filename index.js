@@ -48,7 +48,7 @@ const fs = require("fs");
   const productsString = JSON.stringify(products);
 
   //write to file
-  fs.writeFile("./result.txt", productsString, (err) => {
+  fs.writeFile("./result.json", productsString, (err) => {
     if (err) {
       console.error(err);
     } else {
