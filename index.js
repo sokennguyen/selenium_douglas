@@ -15,7 +15,7 @@ const fs = require("fs");
     });
 
   let cards = await driver.findElements(
-    By.css("a.link.product-tile__main-link"),
+    By.css("a.link.product-tile__main-link .top-brand"),
   );
 
   const cardPromises = cards.map(async (card) => {
@@ -24,6 +24,7 @@ const fs = require("fs");
   });
 
   await Promise.all(cardPromises);
+  console.log(cards.length);
 
   await driver.quit();
 })();
