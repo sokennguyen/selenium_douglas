@@ -14,17 +14,47 @@ const fs = require("fs");
       console.log("Button clicked");
     });
 
-  let cards = await driver.findElements(
+  let cardObjs = [];
+  let brands = await driver.findElements(
     By.css("a.link.product-tile__main-link .top-brand"),
   );
-
-  const cardPromises = cards.map(async (card) => {
+  const brandsPromisses = brands.map(async (card, index) => {
     const innerHTML = await card.getAttribute("innerHTML");
-    console.log(innerHTML);
+    cardObjs[index] = {
+      brand: innerHTML,
+    };
+  });
+
+  await Promise.all(brandsPromisses);
+
+  let cards = await driver.findElements(
+    By.css("a.link.product-tile__main-link .price-row__price--discount"),
+  );
+  const cardPromises = cards.map(async (card, index) => {
+    const innerHTML = await card.getText();
+    cardObjs[index] = {
+      ...cardObjs[index],
+      price: innerHTML,
+    };
+    console.log(cardObjs[index]);
   });
 
   await Promise.all(cardPromises);
-  console.log(cards.length);
+
+  //turn cards into json string
+  let products = {
+    products: cardObjs,
+  };
+  const productsString = JSON.stringify(products);
+
+  //write to file
+  fs.writeFile("./result.txt", productsString, (err) => {
+    if (err) {
+      console.error(err);
+    } else {
+      // file written successfully
+    }
+  });
 
   await driver.quit();
 })();
