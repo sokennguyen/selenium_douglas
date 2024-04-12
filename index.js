@@ -1,5 +1,6 @@
 const { By, Builder } = require("selenium-webdriver");
 const fs = require("fs");
+const { start } = require("repl");
 
 (async function helloSelenium() {
   //init selenium
@@ -48,21 +49,60 @@ const fs = require("fs");
     );
     const price = priceStr.split('product-price__price">')[1].split("&")[0];
 
-    //split price
+    //split volume price
+    const volume = content
+      .split('product-price__extended-content-units">')[1]
+      .split("&")[0]
+      .split("(")[0]
+      .split(" ")[0];
+
+    //split unit price
     const unitPrice = content
       .split('product-price__extended-content-units">')[1]
       .split("&")[0]
       .split("(")[1];
 
+    //split review stars
+    let stars = "0";
+    if (content.indexOf("data-average-rating=") >= 0) {
+      stars = content.split("data-average-rating=")[1].split('"')[1];
+    }
+
+    //split unit price
+    let reviewCount = "0";
+    if (content.indexOf("data-average-rating=") >= 0) {
+      reviewCount = content
+        .split("ratings-info")[1]
+        .split("(")[1]
+        .split(")")[0];
+    }
+
     console.log(
-      index + " " + brand + " " + brandLine + " " + price + " " + unitPrice,
+      index +
+        " " +
+        brand +
+        " " +
+        brandLine +
+        " " +
+        price +
+        " " +
+        volume +
+        " " +
+        unitPrice +
+        " " +
+        stars +
+        " " +
+        reviewCount,
     );
 
     cardObjs[index] = {
       brand: brand,
       "brand-line": brandLine,
-      price: price,
+      price: price * 1,
+      volume: volume * 1,
       unitPrice: unitPrice,
+      stars: stars * 1,
+      "review-count": reviewCount * 1,
     };
   });
   await Promise.all(promisses);
