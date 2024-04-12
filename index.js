@@ -68,7 +68,7 @@ const { start } = require("repl");
       stars = content.split("data-average-rating=")[1].split('"')[1];
     }
 
-    //split unit price
+    //split review count
     let reviewCount = "0";
     if (content.indexOf("data-average-rating=") >= 0) {
       reviewCount = content
@@ -98,7 +98,7 @@ const { start } = require("repl");
     cardObjs[index] = {
       brand: brand,
       "brand-line": brandLine,
-      price: price * 1,
+      price: price,
       volume: volume * 1,
       unitPrice: unitPrice,
       stars: stars * 1,
