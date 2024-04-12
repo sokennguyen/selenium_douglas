@@ -1,9 +1,14 @@
 const { By, Builder } = require("selenium-webdriver");
+const { Options } = require("selenium-webdriver/chrome");
+const options = new Options();
 const fs = require("fs");
 
 (async function helloSelenium() {
   //init selenium
-  let driver = await new Builder().forBrowser("chrome").build();
+  let driver = await new Builder()
+    .forBrowser("chrome")
+    .setChromeOptions(options.addArguments("--headless=new"))
+    .build();
 
   //so perfume page only have 51 pages, not 136 like they say on the page number
 
@@ -48,18 +53,19 @@ const fs = require("fs");
     );
     const price = priceStr.split('product-price__price">')[1].split("&")[0];
 
-    //split volume price
+    //split volume
     const volume = content
       .split('product-price__extended-content-units">')[1]
       .split("&")[0]
       .split("(")[0]
-      .split(" ")[0];
+      .split("<")[0];
 
     //split unit price
     const unitPrice = content
       .split('product-price__extended-content-units">')[1]
       .split("&")[0]
-      .split("(")[1];
+      .split("(")[1]
+      .split(">")[1];
 
     //split review stars
     let stars = "0";
@@ -73,7 +79,9 @@ const fs = require("fs");
       reviewCount = content
         .split("ratings-info")[1]
         .split("(")[1]
-        .split(")")[0];
+        .split(")")[0]
+        .split(">")[1]
+        .split("<")[0];
     }
 
     console.log(
