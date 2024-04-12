@@ -1,6 +1,5 @@
 const { By, Builder } = require("selenium-webdriver");
 const fs = require("fs");
-const { start } = require("repl");
 
 (async function helloSelenium() {
   //init selenium
@@ -79,19 +78,19 @@ const { start } = require("repl");
 
     console.log(
       index +
-        " " +
+        "|" +
         brand +
-        " " +
+        "|" +
         brandLine +
-        " " +
+        "|" +
         price +
-        " " +
+        "|" +
         volume +
-        " " +
+        "|" +
         unitPrice +
-        " " +
+        "|" +
         stars +
-        " " +
+        "|" +
         reviewCount,
     );
 
