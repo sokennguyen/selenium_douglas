@@ -2,11 +2,14 @@ const { By, Builder } = require("selenium-webdriver");
 const fs = require("fs");
 
 (async function helloSelenium() {
+  //init selenium
   let driver = await new Builder().forBrowser("chrome").build();
 
+  //access site and wait for cookie to pop up
   await driver.get("https://www.douglas.de/de/c/parfum/01");
   await driver.manage().setTimeouts({ implicit: 10000 });
 
+  //accept cookie
   await driver
     .findElement(By.css(".uc-list-button__accept-all"))
     .click()
@@ -15,6 +18,7 @@ const fs = require("fs");
     });
 
   let cardObjs = [];
+  //find cards and extract brand
   let brands = await driver.findElements(
     By.css("a.link.product-tile__main-link .top-brand"),
   );
@@ -24,9 +28,9 @@ const fs = require("fs");
       brand: innerHTML,
     };
   });
-
   await Promise.all(brandsPromisses);
 
+  //find cards and extract price
   let cards = await driver.findElements(
     By.css("a.link.product-tile__main-link .price-row__price--discount"),
   );
@@ -38,7 +42,6 @@ const fs = require("fs");
     };
     console.log(cardObjs[index]);
   });
-
   await Promise.all(cardPromises);
 
   //turn cards into json string
