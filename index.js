@@ -48,24 +48,24 @@ const fs = require("fs");
     );
     const price = priceStr.split('product-price__price">')[1].split("&")[0];
 
-    console.log(index + " " + brand + " " + brandLine + " " + price);
+    //split price
+    const unitPrice = content
+      .split('product-price__extended-content-units">')[1]
+      .split("&")[0]
+      .split("(")[1];
+
+    console.log(
+      index + " " + brand + " " + brandLine + " " + price + " " + unitPrice,
+    );
+
     cardObjs[index] = {
       brand: brand,
       "brand-line": brandLine,
       price: price,
+      unitPrice: unitPrice,
     };
   });
   await Promise.all(promisses);
-
-  //extract price
-  let brandLine = await driver.findElements(
-    By.css("a.link.product-tile__main-link .brand-line"),
-  );
-
-  //extract price
-  let prices = await driver.findElements(
-    By.css("a.link.product-tile__main-link .price-row__price--discount"),
-  );
 
   //turn cards into json string
   let products = {
