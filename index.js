@@ -5,8 +5,10 @@ const fs = require("fs");
   //init selenium
   let driver = await new Builder().forBrowser("chrome").build();
 
+  //so perfume page only have 51 pages, not 136 like they say on the page number
+
   //access site and wait for cookie to pop up
-  await driver.get("https://www.douglas.de/de/c/parfum/01");
+  await driver.get("https://www.douglas.de/de/c/parfum/01?page=51");
   await driver.manage().setTimeouts({ implicit: 10000 });
 
   //accept cookie
@@ -14,35 +16,42 @@ const fs = require("fs");
     .findElement(By.css(".uc-list-button__accept-all"))
     .click()
     .then(() => {
-      console.log("Button clicked");
+      console.log("Cookie accpeted");
     });
 
   let cardObjs = [];
+  //insert data into card object
+  const insertCardData = async (data, field) => {
+    const promisses = data.map(async (card, index) => {
+      const content = await card.getAttribute("innerHTML");
+      cardObjs[index] = {
+        ...cardObjs[index],
+        //field name is dynamic
+        [field]: content,
+      };
+      console.log(cardObjs[index]);
+    });
+    await Promise.all(promisses);
+    console.log(field + " is scraped");
+  };
+
   //find cards and extract brand
   let brands = await driver.findElements(
     By.css("a.link.product-tile__main-link .top-brand"),
   );
-  const brandsPromisses = brands.map(async (card, index) => {
-    const innerHTML = await card.getAttribute("innerHTML");
-    cardObjs[index] = {
-      brand: innerHTML,
-    };
-  });
-  await Promise.all(brandsPromisses);
+  await insertCardData(brands, "brand");
 
-  //find cards and extract price
-  let cards = await driver.findElements(
+  //extract price
+  let brandLine = await driver.findElements(
+    By.css("a.link.product-tile__main-link .brand-line"),
+  );
+  await insertCardData(brandLine, "brand-line");
+
+  //extract price
+  let prices = await driver.findElements(
     By.css("a.link.product-tile__main-link .price-row__price--discount"),
   );
-  const cardPromises = cards.map(async (card, index) => {
-    const innerHTML = await card.getText();
-    cardObjs[index] = {
-      ...cardObjs[index],
-      price: innerHTML,
-    };
-    console.log(cardObjs[index]);
-  });
-  await Promise.all(cardPromises);
+  await insertCardData(prices, "price");
 
   //turn cards into json string
   let products = {
