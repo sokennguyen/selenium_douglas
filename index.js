@@ -21,7 +21,6 @@ const fs = require("fs");
     //go through each page with url because next button is not clickable
     await driver.get(`https://www.douglas.de/de/c/parfum/01?page=${i}`);
     await driver.manage().setTimeouts({ implicit: 20000 });
-
     //accept cookie on browser init
     if (i === 1) {
       await driver
