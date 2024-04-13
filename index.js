@@ -174,16 +174,20 @@ const fs = require("fs");
     const productsString = JSON.stringify(products);
 
     //write to file
-    fs.writeFile(`./${categoriesNames[j]}.json`, productsString, (err) => {
-      if (err) {
-        console.error(err);
-      } else {
-        //file written successfully
-        //reset for next category
-        cardObjs = [];
-        arrLength = 0;
-      }
-    });
+    fs.writeFile(
+      `/results/${categoriesNames[j]}.json`,
+      productsString,
+      (err) => {
+        if (err) {
+          console.error(err);
+        } else {
+          //file written successfully
+          //reset for next category
+          cardObjs = [];
+          arrLength = 0;
+        }
+      },
+    );
   }
   await driver.quit();
 })();
