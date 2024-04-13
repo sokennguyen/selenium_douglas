@@ -7,7 +7,7 @@ const fs = require("fs");
   //init selenium
   let driver = await new Builder()
     .forBrowser("chrome")
-    .setChromeOptions(options.addArguments("--headless=new")) //headless mode
+    //.setChromeOptions(options.addArguments("--headless=new")) //headless mode
     .build();
 
   //so all pages only have 51 pages, not hundreds or thousands like they say on the page number
@@ -31,8 +31,9 @@ const fs = require("fs");
   };
   let categoriesNames = Object.keys(categories);
   let categoriesValues = Object.values(categories);
+  let cookieClicked = false;
   for (let j = 0; j <= categoriesNames.length - 1; j++) {
-    if (j < 5) continue;
+    if (j < 6) continue;
     for (let i = 1; i <= 51; i++) {
       //access site and wait for cookie to pop up
       //go through each page with url because next button is not clickable
@@ -41,12 +42,13 @@ const fs = require("fs");
       );
       await driver.manage().setTimeouts({ implicit: 20000 });
       //accept cookie on browser init
-      if (i === 1 && j === 0) {
+      if (i === 1 && !cookieClicked) {
         await driver
           .findElement(By.css(".uc-list-button__accept-all"))
           .click()
           .then(() => {
             console.log("Cookie accpeted");
+            cookieClicked = true;
           });
       }
       //find all cards
