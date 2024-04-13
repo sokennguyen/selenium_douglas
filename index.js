@@ -7,7 +7,7 @@ const fs = require("fs");
   //init selenium
   let driver = await new Builder()
     .forBrowser("chrome")
-    //.setChromeOptions(options.addArguments("--headless=new")) //headless mode
+    .setChromeOptions(options.addArguments("--headless=new")) //headless mode
     .build();
 
   //so all pages only have 51 pages, not hundreds or thousands like they say on the page number
@@ -33,7 +33,6 @@ const fs = require("fs");
   let categoriesValues = Object.values(categories);
   let cookieClicked = false;
   for (let j = 0; j <= categoriesNames.length - 1; j++) {
-    if (j < 6) continue;
     for (let i = 1; i <= 51; i++) {
       //access site and wait for cookie to pop up
       //go through each page with url because next button is not clickable
